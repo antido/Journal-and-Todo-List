@@ -1,0 +1,207 @@
+@import 'tailwindcss';
+
+/* Theme is driven by <html data-theme>, set before paint in index.html. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/*
+ * Design tokens.
+ * Raw values live on :root / [data-theme='dark']; `@theme inline` maps them to
+ * Tailwind utilities (bg-surface, text-ink, border-line, …) so components never
+ * need per-mode `dark:` overrides and every screen stays consistent.
+ */
+:root {
+  color-scheme: light;
+
+  --canvas: #f6f5f3;
+  --surface: #ffffff;
+  --surface-2: #f3f2ef;
+  --surface-3: #e9e7e3;
+  --line: #e8e6e1;
+  --line-strong: #d5d2cb;
+  --ink: #1b1a18;
+  --ink-2: #45423d;
+  --muted: #736f68;
+  --faint: #a19d95;
+
+  --accent: #5b4bd6;
+  --accent-hover: #4c3cc4;
+  --accent-soft: #eeecfc;
+  --accent-ink: #ffffff;
+
+  --success: #047857;
+  --success-fill: #059669;
+  --success-soft: #d1fae5;
+  --danger: #b91c1c;
+  --danger-soft: #fee2e2;
+  --warning: #d97706;
+
+  --shadow-card: 0 1px 2px rgb(28 25 23 / 0.04), 0 1px 3px rgb(28 25 23 / 0.03);
+  --shadow-float: 0 12px 32px -8px rgb(28 25 23 / 0.18), 0 2px 6px rgb(28 25 23 / 0.06);
+
+  /*
+   * Mood is an ordered, two-sided scale (awful ↔ great), so it uses a diverging
+   * palette: a red arm, a neutral gray midpoint for "okay", and a blue arm.
+   * Each arm is validated as an ordinal ramp against the card surface in both
+   * modes. Mood is never shown by color alone - always with its emoji + label.
+   */
+  --mood-1: #b83232;
+  --mood-2: #e37a73;
+  --mood-3: #a8a69f;
+  --mood-4: #6da7ec;
+  --mood-5: #1c5cab;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --canvas: #0f0e0d;
+  --surface: #1a1917;
+  --surface-2: #232220;
+  --surface-3: #2d2b28;
+  --line: #2b2926;
+  --line-strong: #3b3935;
+  --ink: #f4f3f1;
+  --ink-2: #d6d3ce;
+  --muted: #a29e97;
+  --faint: #6f6b65;
+
+  --accent: #9d90ff;
+  --accent-hover: #b3a9ff;
+  --accent-soft: rgb(157 144 255 / 0.14);
+  --accent-ink: #14121f;
+
+  --success: #34d399;
+  --success-fill: #10b981;
+  --success-soft: rgb(16 185 129 / 0.16);
+  --danger: #f87171;
+  --danger-soft: rgb(248 113 113 / 0.14);
+  --warning: #fbbf24;
+
+  --shadow-card: 0 0 0 transparent;
+  --shadow-float: 0 16px 40px -8px rgb(0 0 0 / 0.6), 0 0 0 1px rgb(255 255 255 / 0.06);
+
+  --mood-1: #ee7a78;
+  --mood-2: #b85450;
+  --mood-3: #78766f;
+  --mood-4: #3a79c9;
+  --mood-5: #86b6ef;
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-ink: var(--accent-ink);
+  --color-success: var(--success);
+  --color-success-fill: var(--success-fill);
+  --color-success-soft: var(--success-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-warning: var(--warning);
+
+  --shadow-card: var(--shadow-card);
+  --shadow-float: var(--shadow-float);
+}
+
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Fraunces Variable', ui-serif, Georgia, serif;
+
+  --animate-fade-in: fade-in 200ms cubic-bezier(0.2, 0, 0, 1);
+  --animate-toast-in: toast-in 240ms cubic-bezier(0.2, 0, 0, 1);
+  --animate-pop: pop 260ms cubic-bezier(0.3, 1.6, 0.6, 1);
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes pop {
+    0% {
+      transform: scale(0.6);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply min-h-dvh bg-canvas font-sans text-[15px] leading-normal text-ink antialiased;
+    font-feature-settings: 'cv11', 'ss01', 'ss03';
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    @apply bg-accent-soft text-ink;
+  }
+
+  /* One focus style everywhere: an accent ring for keyboard users. */
+  :where(a, button, [role='button'], [tabindex], select, summary):focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']) {
+    cursor: pointer;
+  }
+
+  input[type='date']::-webkit-calendar-picker-indicator {
+    opacity: 0.55;
+    cursor: pointer;
+  }
+
+  [data-theme='dark'] input[type='date']::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+  }
+}
+
+@layer components {
+  /* Shared text-field treatment: bordered surface with an accent focus ring. */
+  .field {
+    @apply rounded-xl border border-line bg-surface text-ink shadow-card outline-none transition-[border-color,box-shadow] placeholder:text-faint;
+  }
+
+  .field:focus,
+  .field:focus-within {
+    @apply border-accent ring-4 ring-accent/15;
+  }
+
+  /* Small uppercase label used above groups and lists. */
+  .eyebrow {
+    @apply text-[11px] font-semibold tracking-[0.08em] text-muted uppercase;
+  }
+}
